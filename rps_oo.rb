@@ -15,7 +15,7 @@ class RockPaperScissors
 
 	end
 
-	def arbitrate(ch1, ch2)
+	def self.arbitrate(ch1, ch2)
 		result = arbi_pattern[ch1][ch2]
 
 		case result
@@ -32,15 +32,21 @@ class RockPaperScissors
 end
 
 class HumanPlayer < RockPaperScissors
+		
 		choice=""
-		rps_digit={"r"=>0, "p"=>1, "s"=>2}
+		
+		def choice_to_i(ch)
+		 return  {"r"=>0, "p"=>1, "s"=>2}[ch]
+		end
+
 		def choose
 			begin
 				puts "Choose one: R/P/S"
 				choice = gets.chomp.downcase
-			end while (choice !="r") && choice!="p" && choice!="s"
-			puts rps_digit[choice].to_s
-			return rps_digit[choice]
+			end while (choice !="r") && (choice!="p") && (choice!="s")
+			puts choice
+			puts choice_to_i(choice)
+			return choice_to_i(choice)
 		end
 
 end
