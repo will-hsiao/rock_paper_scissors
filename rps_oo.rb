@@ -6,62 +6,61 @@
 
 #-----------Rock Paper Scissor
 class RockPaperScissors
-	attr_accessor :choice, :gesture
-	attr_reader :gesture_to_i, :choice_to_g, :arbitration, :arbi_words
-
-	TIE = 0; LOSE = 1; WIN = 2
-	@@arbitration=[ [TIE, LOSE, WIN], [WIN, TIE, LOSE], [LOSE, WIN, TIE]]
-	@@arbi_words=["Rock break Scissors",  "Paper wraps Rock", "Scissors cut Paper", "Paper wraps Rock"]
-	@@gesture_to_i={"r"=>0,  "p"=>1, "s"=>2}
-	@@choice_to_g = ["r", "p", "s"]
-
+	attr_reader :arbitration, :arbi_words
+       TIE = 0; LOSE = 1; WIN = 2
 	def initialize
-		@choice = nil
-		@gesture = nil
+        @arbitration=[ [TIE, LOSE, WIN], [WIN, TIE, LOSE], [LOSE, WIN, TIE]]
+        @arbi_words=["Rock break Scissors",  "Paper wraps Rock", "Scissors cut Paper", "Paper wraps Rock"]
 	end
 
-	def arbitrate(ch2)
-		result=@@arbitration[@choice][ch2]
+	def arbitrate(ch1, ch2)
+		result=@arbitration[ch1.choice][ch2.choice]
 		case result
 		when TIE
 			puts "It's a tie!"
 		when LOSE
-			puts @@arbi_words[ch2]
-			puts "You lose!"
+			puts @arbi_words[ch2.choice]
+			puts "#{ch1.name} lose!"
 		when WIN
-			puts @@arbi_words[@choice]
-			puts "You win!"
+			puts @arbi_words[ch1.choice]
+			puts "#{ch1.name} win!"
 		end
 	end
 
 end #end class
 
 class Player
-	attr_accessor :name, :choice
-	def initailize(name)
-		@name=name
+
+	attr_accessor :name, :choice, :gesture
+
+	def initialize(n)
+             @choice = nil
+             @gesture = nil
+		@name=n
+             @gesture_to_i={"r"=>0,  "p"=>1, "s"=>2}
+             @choice_to_g = ["r", "p", "s"]
+
 	end
 	def choose_by_input
 		begin
 			puts "Choose one: R/P/S"
-			@choice=gets.chomp
-		end while @choice != 'r' && @choice != 'p' && @choice != 's'
-		@choice = @@gesture_to_i[@gesture]
+			@gesture=gets.chomp
+		end while @gesture != 'r' && @gesture != 'p' && @gesture != 's'
+		@choice = @gesture_to_i[@gesture]
 
 	end
 
 	def choose_by_rand
-		@choice = rand(3)
-		@gesture =@@choice_to_g[@choice]
+		@choice = [1,2.3].sample
+		@gesture =@choice_to_g[@choice]
 	end
 
 end #end class Player
 
 class Game
 
-	def initialize(name1, name2)
-		player1 = Player.new(name1)
-		player2 = Player.new(name2)
+	def initialize
+
 	end
 
 
@@ -73,24 +72,24 @@ class Game
 #get computer's gesture
 #compare user's vs. computer's
 #print result
-	def run
 
+	def run
+      player1 = Player.new("You")
+      player2 = Player.new("Computer")
+      rps = RockPaperScissors.new
 		begin
 			puts "---------Play Rock Paper Scissors!----------------"
-
-			player1 = RockPaperScissors.new
-			player2 = RockPaperScissors.new
 
 			player1.choose_by_input
 			player2.choose_by_rand
 
-			puts "You picked #{player1.gesture}, and Computer picked #{player2.gesture}"
+			puts "#{player1.name} picked #{player1.gesture}, and #{player2.name} picked #{player2.gesture}"
 
-			player1.arbitrate(player2.choice)
+			rps.arbitrate(player1, player2)
 
 			puts "Do you want to play again? (Y/N)"
-			play=gets.chomp
-			play = (play == 'Y' || play =='y') ? TRUE: FALSE
+			play=gets.chomp.downcase
+			play = ( play =='y') ? TRUE: FALSE
 
 		end while play==TRUE
 	end
